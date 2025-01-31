@@ -16,7 +16,8 @@
     "plugin",
     "sqlseal",
     "charts",
-    "visualisation"
+    "visualisation",
+    "graphs"
   ],
   "repository": {
     "type": "github",
