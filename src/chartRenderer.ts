@@ -28,12 +28,16 @@ export class ChartRenderer implements RendererConfig {
             render: ({ columns, data }: { columns: string[], data: Record<string, unknown>[]}) => {
                 const { functions, variables } = prepareDataVariables({ columns, data })
                 const parsedConfig = parseCode(config.config, functions, variables)
-                const dataset = [{ id: 'data', source: data }, ...(parsedConfig.dataset ?? [])]
-                parsedConfig.dataset = dataset
+                if (!parsedConfig || typeof parsedConfig !== 'object') {
+                    throw new Error('Issue with parsing config')
+                }
+                const configRecord = parsedConfig as Record<string, any>
+                const dataset = [{ id: 'data', source: data }, ...(configRecord.dataset ?? [])]
+                configRecord.dataset = dataset
 
                 if (isRendered) {
                     // Data update
-                    chart?.setOption(parsedConfig)
+                    chart?.setOption(configRecord)
                     return
                 }
 
@@ -45,7 +49,7 @@ export class ChartRenderer implements RendererConfig {
                     const width = box.width
                     const height = box.height
                     chart = echarts.init(chartDiv, null, { height: height, width: width,  })
-                    chart.setOption(parsedConfig)
+                    chart.setOption(configRecord)
                     isRendered = true
                 })
             },
