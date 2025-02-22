@@ -35,7 +35,7 @@ CHART {
 SELECT * FROM finances
 ```
 
-![Pie Chart Example](./docs/pie_chart.png)
+![Pie Chart Example](./screenshots/pie_chart.png)
 
 ### Line Chart
 ```sqlseal
@@ -56,7 +56,7 @@ GROUP BY created_date
 ORDER BY created_date
 ```
 
-![Line Chart Example](./docs/line_chart.png)
+![Line Chart Example](./screenshots/line_chart.png)
 
 
 ## Syntax
