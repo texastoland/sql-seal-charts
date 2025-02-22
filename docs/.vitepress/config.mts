@@ -25,7 +25,15 @@ export default defineConfig({
       {
         text: 'Documentation',
         items: [
-          { text: 'Quick Start', link: '/quick-start' }
+          { text: 'Quick Start', link: '/quick-start' },
+          { text: 'Syntax', link: '/syntax' }
+        ]
+      },
+      {
+        text: 'Chart Types',
+        items: [
+          { text: 'Line Chart', link: '/chart-type/line-chart' },
+          { text: 'Bar Chart', link: '/chart-type/bar-chart' }
         ]
       }
     ],
