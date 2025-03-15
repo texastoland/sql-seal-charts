@@ -13,5 +13,9 @@ export default class SQLSealCharts extends Plugin {
     const api = pluginApi('sqlseal') as SQLSealRegisterApi
     const registar = api.registerForPlugin(this)
     registar.registerView('sqlseal-charts', new ChartRenderer(this.app))
+
+    if (api.apiVersion >= 2) {
+      registar.registerFlag({ key: 'isAdvancedMode', name: 'ADVANCED MODE' })
+    }
   }
 }

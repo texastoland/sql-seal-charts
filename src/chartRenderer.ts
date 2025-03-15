@@ -3,6 +3,8 @@ import { parseCode } from "./utils/configParser";
 import { prepareDataVariables } from "./utils/prepareDataVariables";
 import * as echarts from 'echarts';
 import type { RendererConfig } from "@hypersphere/sqlseal";
+import { ViewDefinition } from "@hypersphere/sqlseal/dist/src/grammar/parser";
+import { parseCodeAdvanced } from "./utils/advancedParser";
 
 interface Config {
     config: string
@@ -13,21 +15,46 @@ export class ChartRenderer implements RendererConfig {
     constructor(private readonly app: App) {
     }
 
+    get viewDefinition(): ViewDefinition {
+        return {
+            argument: 'javascriptTemplate',
+            name: 'chart',
+            singleLine: false
+        }
+    }
+
     get rendererKey() {
         return 'chart'
     }
 
     validateConfig(config: string): Config {
-        return { config }
+        return { config: config.trim() }
     }
 
     render(config: Config, el: HTMLElement) {
         let isRendered: boolean = false
         let chart: echarts.ECharts | null = null
         return {
-            render: ({ columns, data }: { columns: string[], data: Record<string, unknown>[]}) => {
+            render: ({ columns, data, flags }: { columns: string[], data: Record<string, unknown>[], flags: Record<string, boolean> }) => {
+
+                const isAdvancedMode = !!(flags?.isAdvancedMode)
+
+                if (config.config[0] !== '{' && !isAdvancedMode) {
+                    throw new Error('To process JavaScript, set ADVANCED MODE flag')
+                }
                 const { functions, variables } = prepareDataVariables({ columns, data })
-                const parsedConfig = parseCode(config.config, functions, variables)
+
+                let parsedConfig: Object = {}
+                if (isAdvancedMode) {
+                    try {
+                        parsedConfig = parseCodeAdvanced({ functions, variables }, config.config)
+                    } catch (e) {
+                        console.error(e)
+                        throw e
+                    }
+                } else {
+                    parsedConfig = parseCode(config.config, functions, variables) as Object
+                }
                 if (!parsedConfig || typeof parsedConfig !== 'object') {
                     throw new Error('Issue with parsing config')
                 }
