@@ -2,6 +2,7 @@ import { App } from "obsidian";
 import { parseCode } from "./utils/configParser";
 import { prepareDataVariables } from "./utils/prepareDataVariables";
 import * as echarts from 'echarts';
+import * as ecStat from 'echarts-stat';
 import type { RendererConfig } from "@hypersphere/sqlseal";
 import { ViewDefinition } from "@hypersphere/sqlseal/dist/src/grammar/parser";
 import { parseCodeAdvanced } from "./utils/advancedParser";
@@ -9,6 +10,12 @@ import { parseCodeAdvanced } from "./utils/advancedParser";
 interface Config {
     config: string
 }
+
+console.log((ecStat as any).transform)
+
+echarts.registerTransform((ecStat as any).transform.clustering);
+echarts.registerTransform((ecStat as any).transform.regression);
+echarts.registerTransform((ecStat as any).transform.histogram);
 
 export class ChartRenderer implements RendererConfig {
 
@@ -59,8 +66,10 @@ export class ChartRenderer implements RendererConfig {
                     throw new Error('Issue with parsing config')
                 }
                 const configRecord = parsedConfig as Record<string, any>
-                const dataset = [{ id: 'data', source: data }, ...(configRecord.dataset ?? [])]
-                configRecord.dataset = dataset
+                if (!configRecord.dataset) {
+                    const dataset = [{ id: 'data', source: data }, ...(configRecord.dataset ?? [])]
+                    configRecord.dataset = dataset
+                }
 
                 if (isRendered) {
                     // Data update
