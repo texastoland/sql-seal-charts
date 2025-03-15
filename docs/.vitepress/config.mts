@@ -26,7 +26,11 @@ export default defineConfig({
         text: 'Documentation',
         items: [
           { text: 'Quick Start', link: '/quick-start' },
-          { text: 'Syntax', link: '/syntax' }
+          { text: 'Syntax', link: '/syntax' },
+          { text: 'Advanced Mode', link: '/advanced-mode' },
+          { text: 'Data Analysis Features', link: '/data-analysis-features' }
+
+
         ]
       },
       {
