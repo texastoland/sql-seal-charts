@@ -66,11 +66,9 @@ export class ChartRenderer implements RendererConfig {
                     throw new Error('Issue with parsing config')
                 }
                 const configRecord = parsedConfig as Record<string, any>
-                if (!configRecord.dataset) {
-                    const dataset = [{ id: 'data', source: data }, ...(configRecord.dataset ?? [])]
-                    configRecord.dataset = dataset
-                }
-
+                const { dataset = [] } = configRecord
+                configRecord.dataset = [{ id: 'data', source: data }, ...dataset] 
+                
                 if (isRendered) {
                     // Data update
                     chart?.setOption(configRecord)
