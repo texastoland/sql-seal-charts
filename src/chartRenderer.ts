@@ -67,7 +67,9 @@ export class ChartRenderer implements RendererConfig {
                 }
                 const configRecord = parsedConfig as Record<string, any>
                 const { dataset = [] } = configRecord
-                configRecord.dataset = [{ id: 'data', source: data }, ...dataset] 
+                if (dataset[0]?.id !== 'data') {
+                    configRecord.dataset = [{ id: 'data', source: data }, ...dataset] 
+                }
                 
                 if (isRendered) {
                     // Data update
